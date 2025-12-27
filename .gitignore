@@ -1,0 +1,20 @@
+# Node
+node_modules/
+
+# SQLite database
+data/*.sqlite
+data/*.db
+
+# Environment / secrets
+.env
+*.env
+docker-compose.override.yml
+
+# Docker
+*.log
+
+# OS junk
+.DS_Store
+
+#Legacy
+Legacy/
