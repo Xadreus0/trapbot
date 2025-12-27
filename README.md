@@ -245,3 +245,7 @@ Administrator permission is optional but simplifies setup.
 8. Test onboarding behaviour with test accounts
 
 9. Disable dry-run mode when satisfied
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
