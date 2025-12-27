@@ -35,6 +35,12 @@ To the maximum extent permitted by law, the bot maintainer shall not be liable f
 
 The bot’s functionality, behaviour, or availability may be modified or discontinued at any time without notice.
 
+## Third-Party Forks and Modifications
+
+TrapBot is provided as open-source software. Forks, modified versions, or independently hosted deployments are not affiliated with or endorsed by the original author unless explicitly stated.
+
+The original author is not responsible for the behaviour, data handling, enforcement actions, or availability of any third-party deployments or modified versions of the software.
+
 ## Termination
 
 Access to TrapBot may be terminated at any time, including removal from servers or disabling of functionality, without prior notice.
