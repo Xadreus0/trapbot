@@ -45,6 +45,12 @@ TrapBot does not sell, share, or disclose collected information to third parties
 
 Reasonable technical measures are taken to protect stored data from unauthorized access. Sensitive credentials such as bot tokens are not shared publicly.
 
+## Forks and Third-Party Deployments
+
+TrapBot is an open-source project. This Privacy Policy applies only to the official deployment of TrapBot as maintained by the original author.
+
+If this software is forked, modified, or deployed independently by third parties, those deployments are not controlled by the original author, and this Privacy Policy does not apply to them. Third-party operators are solely responsible for their own data handling practices.
+
 ## Changes to This Policy
 
 This Privacy Policy may be updated from time to time. Continued use of TrapBot after changes constitutes acceptance of the updated policy.
