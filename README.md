@@ -4,6 +4,8 @@ TrapBot is a lightweight Discord moderation bot designed to detect and remove au
 
 The bot is multi-server capable and is designed to run with minimal resource usage.
 
+https://discord.com/oauth2/authorize?client_id=1454329885219618958&scope=bot%20applications.commands&permissions=1099780066438
+
 ---
 
 ## How the Onboarding Trap Works
