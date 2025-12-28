@@ -234,6 +234,9 @@ async function registerCommandsForGuild(guildId) {
           description: "Remove a mod-exempt role",
           options: [{ type: 8, name: "role", description: "Role", required: true }],
         },
+        { type: 1, 
+          name: "sync", 
+          description: "Re-register slash commands for this server" },
       ],
     },
   ];
@@ -308,6 +311,19 @@ client.once("ready", async () => {
     }
   }
 });
+
+// ---------- NEW GUILD: register slash commands immediately ----------
+client.on("guildCreate", async (guild) => {
+  try {
+    await client.application.fetch();
+    await new Promise((r) => setTimeout(r, 1500)); // small warm-up delay
+    await registerCommandsForGuild(guild.id);
+    console.log("Registered slash commands for new guild:", guild.id, guild.name);
+  } catch (e) {
+    console.error("guildCreate command registration failed:", guild.id, e?.message ?? e);
+  }
+});
+
 
 // ---------- INTERACTIONS ----------
 client.on("interactionCreate", async (interaction) => {
@@ -451,6 +467,16 @@ client.on("interactionCreate", async (interaction) => {
       await interaction.reply({ ephemeral: true, content: `Removed mod-exempt role <@&${role.id}>.` });
       return;
     }
+
+    if (sub === "sync") {
+      await registerCommandsForGuild(gid);
+      await interaction.reply({
+        ephemeral: true,
+        content: "Slash commands re-registered for this server.",
+      });
+      return;
+    }
+
 
     await interaction.reply({ ephemeral: true, content: "Unknown subcommand." });
   } catch (e) {
