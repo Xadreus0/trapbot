@@ -272,6 +272,12 @@ async function purgePendingForGuild(guildId) {
   await dbRun("DELETE FROM pending WHERE guild_id=?", [guildId]);
 }
 
+async function ensureGuildConfig(guildId) {
+  
+  const cfg = await getGuildConfig(guildId);
+  if (cfg) return cfg;
+  return await upsertGuildConfig(guildId, {});
+}
 // ---------- READY ----------
 client.once("ready", async () => {
   console.log(`Logged in as ${client.user.tag}`);
@@ -318,6 +324,7 @@ client.on("guildCreate", async (guild) => {
     await client.application.fetch();
     await new Promise((r) => setTimeout(r, 1500)); // small warm-up delay
     await registerCommandsForGuild(guild.id);
+    await ensureGuildConfig(guild.id);
     console.log("Registered slash commands for new guild:", guild.id, guild.name);
   } catch (e) {
     console.error("guildCreate command registration failed:", guild.id, e?.message ?? e);
@@ -350,7 +357,7 @@ client.on("interactionCreate", async (interaction) => {
 
     const sub = interaction.options.getSubcommand();
     const gid = guild.id;
-    const cur = await getGuildConfig(gid);
+    const cur = await ensureGuildConfig(gid);
 
     if (sub === "status") {
       const cfg = cur || {};
@@ -492,8 +499,7 @@ client.on("interactionCreate", async (interaction) => {
 // ---------- JOIN: record pending baseline ----------
 client.on("guildMemberAdd", async (member) => {
   try {
-    const cfg = await getGuildConfig(member.guild.id);
-    if (!cfg) return;
+    const cfg = await ensureGuildConfig(member.guild.id);
 
     await setPending(member.guild.id, member.user.id, nowSec());
     await logToGuild(member.guild, cfg, `JOIN tracked: <@${member.user.id}> (${member.user.id})`);
@@ -506,8 +512,9 @@ client.on("guildMemberAdd", async (member) => {
 client.on("guildMemberUpdate", async (oldMember, newMember) => {
   try {
     const gid = newMember.guild.id;
-    const cfg = await getGuildConfig(gid);
-    if (!cfg?.trap_role_id || !cfg?.default_role_id) return;
+    const cfg = await ensureGuildConfig(gid);
+    if (!cfg.trap_role_id || !cfg.default_role_id) return;
+
 
     const trapId = cfg.trap_role_id;
     const defId = cfg.default_role_id;
@@ -556,9 +563,9 @@ async function sweepOnce() {
   );
 
   for (const r of rows) {
-    const cfg = await getGuildConfig(r.guild_id);
-    if (!cfg || !cfg.trap_role_id || !cfg.default_role_id) {
-      await clearPending(r.guild_id, r.user_id);
+    const cfg = await ensureGuildConfig(r.guild_id);
+    if (!cfg.trap_role_id || !cfg.default_role_id) {
+      // Not configured yet - keep the pending row
       continue;
     }
 
